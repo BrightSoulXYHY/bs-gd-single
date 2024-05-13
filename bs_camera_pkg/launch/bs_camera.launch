@@ -1,0 +1,3 @@
+<launch>
+    <node name="rviz" pkg="rviz" type="rviz" respawn="false" args="-d $(find bs_camera_pkg)/launch/bs_camera.rviz"/>
+</launch>

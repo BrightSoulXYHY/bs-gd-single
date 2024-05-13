@@ -1,0 +1,3 @@
+<launch>
+    <node pkg="bs_multi_solver" type="subscriber.py" name="subscriber" output="screen" />
+</launch>

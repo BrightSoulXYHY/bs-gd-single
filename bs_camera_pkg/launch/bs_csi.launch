@@ -1,0 +1,3 @@
+<launch>
+    <node pkg="bs_camera_pkg" type="csi_run.py" name="csi_run" output="screen"/>
+</launch>
