@@ -18,7 +18,7 @@ str_sn = dev_info_list[0].get("sn")
 cam = device_manager.open_device_by_sn(str_sn)
 #set parameters
 cam.TriggerMode.set(gx.GxSwitchEntry.OFF)#set continuous acquisition
-cam.ExposureTime.set(500)  #set exposure time
+cam.ExposureTime.set(1000)  #set exposure time
 
 
 cam.stream_on()

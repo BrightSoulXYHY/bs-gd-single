@@ -8,8 +8,8 @@ import cv2
 from cv_bridge import CvBridge
 import numpy as np
 
-from modified_bs_module.bs_img.bs_cfg_real_1m import * 
-from modified_bs_module import solve 
+#from modified_bs_module.bs_img.bs_cfg_real_1m import * 
+#from modified_bs_module import solve 
 
 def callback(imgmsg):
     bridge = CvBridge()
@@ -17,13 +17,15 @@ def callback(imgmsg):
     img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     #  solve realtive pose after acquiring the grayscale image
     #  phisical parameters     from bs_cfg_real_1m   
-    cameraMatrix = camK_lf
-    distortedcoeffs = distortion_coeffs
-    Rwt = R_wt
-    plane_real_pt= plane_real_ptL
-    data_total = solve.solve(img_gray, camera_matrix=cameraMatrix, distortion_coeffs= distortedcoeffs, 
-                    plane_real_ptL= plane_real_pt, R_wt= Rwt)
-    print(data_total)
+    #cameraMatrix = camK_lf
+    #distortedcoeffs = distortion_coeffs
+    #Rwt = R_wt
+    #plane_real_pt= plane_real_ptL
+    #data_total = solve.solve(img_gray, camera_matrix=cameraMatrix, distortion_coeffs= distortedcoeffs, 
+    #                plane_real_ptL= plane_real_pt, R_wt= Rwt)
+    #print(data_total)
+    cv2.imshow(img_gray)
+    cv2.WaitKey(0)
 
 
 def listener():

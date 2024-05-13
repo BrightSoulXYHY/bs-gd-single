@@ -5,9 +5,8 @@ import numpy as np
 
 from bs_img.bs_cfg_real_1m import *
 from bs_img.bs_img_base import *
-from bs_img.gauss_fit import *
-from bs_img.ellipse_fit import *
-
+# from bs_img.gauss_fit import *
+# from bs_img.ellipse_fit import *
 
 def img_to_pts(img_gray,min_area, max_area ,threshold):
     '''提取图片中的特征点'''
