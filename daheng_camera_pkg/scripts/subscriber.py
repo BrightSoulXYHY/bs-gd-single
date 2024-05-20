@@ -17,8 +17,7 @@ def callback(imgmsg):
     # distortedcoeffs = bs_img.bs_cfg_real_1m.distortion_coefffs
     # Rwt = bs_img.bs_cfg_real_1m.R_wt
     # plane_real_= bs_img.bs_cfg_real_1m.plane_real_ptL
-    cv2.imshow('1',img_gray)
-    cv2.waitKey(0)
+    
 
 def listener():
 

@@ -19,6 +19,7 @@ from bs_imu import bs_imu
 from bs_imu import bs_gps_raw
 from bs_img import bs_img_real
 from bs_img.bs_cfg_real_5m import *
+from bs_lie_solve import *
 
 '''
 输入图像
@@ -32,7 +33,8 @@ class BS_Solver:
     def __init__(self):
         lf_img_topic = "image_dh_lf"
         sf_img_topic = "image_dh_sf"
-
+        self.last_plane_pts = np.array([])   #保存上一帧点用于配对
+        self.is_first_frame = None                  #判断是否为第一帧
 
         self.img_bridge = CvBridge()
 
@@ -40,7 +42,8 @@ class BS_Solver:
         self.sf_img_sub = rospy.Subscriber(sf_img_topic, Image, self.sf_img_cb)
 
         # self.lf_res_pub = rospy.Publisher("/bs_debuger/result/lf", Transform , queue_size=1)
-        self.sf_res_pub = rospy.Publisher("/bs_debuger/result/sf", Transform , queue_size=1)
+        self.sf_plane_pub = rospy.Publisher("/bs_debuger/result/sf_plane", Transform , queue_size=1)
+        self.sf_drogue_pub = rospy.Publisher("/bs_debuger/result/sf_drogue", Transform , queue_size=1)
 
         # self.img_res_pub = rospy.Publisher("/bs_debuger/image_res", Image, queue_size=1)
 
@@ -77,25 +80,24 @@ class BS_Solver:
         _, img_bin = cv2.threshold(img_gray, 50, 0xff, cv2.THRESH_BINARY)
         # 如果相机倒置需要旋转一下
         # lf_img_gray = cv2.rotate(lf_img_gray, cv2.ROTATE_180)
+        
+        plane_t_vec = [np.nan]*3
+        plane_quat = [np.nan]*4
+        drogue_t_vec = [np.nan]*3
+        
         gt_pts,_ = bs_img_real.img_to_pts(img_bin)
-        result_dict = bs_img_real.solve_plane_pt(gt_pts,plane_real_ptL=plane_real_ptL,cam_K=camK_sf)
-        # print(gt_pts)
-        print(result_dict["t_vec"])
+         
+        drogue_result_dict = bs_img_real.solve_drogue(gt_pts, camera_matrix=camK_sf, d_drogue=d_drogue)
+            
+        drogue_t_vec = drogue_result_dict["t_vec"]
         
-        
-        
-        x,y,z = result_dict["t_vec"]
-        qw,qx,qy,qz = bs_imu.rot_vec_to_quat(result_dict["r_vec"])
 
-        trans_msg = Transform()
-        trans_msg.translation.x = x
-        trans_msg.translation.y = y
-        trans_msg.translation.z = z
-        trans_msg.rotation.w = qw
-        trans_msg.rotation.x = qx
-        trans_msg.rotation.y = qy
-        trans_msg.rotation.z = qz
-        self.sf_res_pub.publish(trans_msg)
+        
+        drogue_msg = Transform()
+        drogue_msg.translation.x = drogue_t_vec[0]
+        drogue_msg.translation.y = drogue_t_vec[1]
+        drogue_msg.translation.z = drogue_t_vec[2]
+        self.sf_drogue_pub.publish(drogue_msg)
 
 
 

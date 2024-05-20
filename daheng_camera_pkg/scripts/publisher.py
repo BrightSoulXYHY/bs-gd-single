@@ -18,16 +18,14 @@ str_sn = dev_info_list[0].get("sn")
 cam = device_manager.open_device_by_sn(str_sn)
 #set parameters
 cam.TriggerMode.set(gx.GxSwitchEntry.OFF)#set continuous acquisition
-cam.ExposureTime.set(1000)  #set exposure time
+cam.ExposureTime.set(10000)  #set exposure time
 
 
 cam.stream_on()
 
 def talker():
-    pub = rospy.Publisher('webcam', Image, queue_size=1)
+    pub = rospy.Publisher('image_dh_sf', Image, queue_size=1)
     rospy.init_node('publisher', anonymous=True)
-    rate = rospy.Rate(30) # 30hz
-    cam.ExposureTime.set(10000)  #set exposure time
     while not rospy.is_shutdown():
         raw_image = cam.data_stream[0].get_image()
         rgb_image = raw_image.convert("RGB")
