@@ -1,0 +1,3 @@
+[submodule "bs_multi_solver/bs_module"]
+	path = bs_multi_solver/bs_module
+	url = git@gitee.com:FHSY/bs_module.git
