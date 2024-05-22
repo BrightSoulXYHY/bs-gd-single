@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
 import cv2
@@ -71,7 +71,7 @@ class BS_Solver:
 
     def lf_img_cb(self,img_msg):
         img_bridge = CvBridge()
-        img_gray = img_bridge.imgmsg_to_cv2(img_msg, img_msg.encoding)
+        img_gray = img_bridge.imgmsg_to_cv2(img_msg, "bgr8")
         img_gray = cv2.cvtColor(img_gray,cv2.COLOR_RGB2GRAY)
         img_gray = cv2.undistort(img_gray,camK_lf, distortion_coeffs_lf)  #去除相机成像畸变
         _, img_bin = cv2.threshold(img_gray, 50, 0xff, cv2.THRESH_BINARY)
@@ -81,9 +81,11 @@ class BS_Solver:
         plane_t_vec = [np.nan]*3
         plane_quat = [np.nan]*4
         drogue_t_vec = [np.nan]*3
+        plane_rpe = np.nan
+        drogue_rpe = np.nan
         
         gt_pts,_ = bs_img_real.img_to_pts(img_bin)
-        if self.lf_is_first_frame:   #第一帧图像
+        if self.lf_is_first_frame and len(self.lf_last_plane_pts) == 0:   #第一帧图像
             plane_result_dict = bs_img_real.solve_plane_pt(gt_pts,plane_real_ptL=plane_real_ptL,cam_K=camK_lf)
             if plane_result_dict["img_valid"]:
                 self.lf_is_first_frame = False 
@@ -152,7 +154,7 @@ class BS_Solver:
 
     def sf_img_cb(self,img_msg):
         img_bridge = CvBridge()
-        img_gray = img_bridge.imgmsg_to_cv2(img_msg, img_msg.encoding)
+        img_gray = img_bridge.imgmsg_to_cv2(img_msg, "bgr8")
         img_gray = cv2.cvtColor(img_gray,cv2.COLOR_RGB2GRAY)
         img_gray = cv2.undistort(img_gray,camK_sf, distortion_coeffs_sf)  #去除相机成像畸变
         _, img_bin = cv2.threshold(img_gray, 50, 0xff, cv2.THRESH_BINARY)
@@ -162,9 +164,11 @@ class BS_Solver:
         plane_t_vec = [np.nan]*3
         plane_quat = [np.nan]*4
         drogue_t_vec = [np.nan]*3
-        
+        plane_rpe = np.nan
+        drogue_rpe = np.nan
+                
         gt_pts,_ = bs_img_real.img_to_pts(img_bin)
-        if self.sf_is_first_frame:   #第一帧图像
+        if self.sf_is_first_frame and len(self.lf_last_plane_pts) == 0:   #第一帧图像
             plane_result_dict = bs_img_real.solve_plane_pt(gt_pts,plane_real_ptL=plane_real_ptL,cam_K=camK_sf)
             if plane_result_dict["img_valid"]:
                 self.sf_is_first_frame = False 
