@@ -1,5 +1,3 @@
 <launch>
     <node pkg="daheng_camera_pkg" name="publisher" type="publisher.py" output="screen" />
-    <!-- <node pkg="bs_multi_solver" name="subscriber1" type="subscriber.py" output="screen" /> -->
-    <!-- <node pkg="rosbag" name="record" type="bag_record" args="webcam" /> -->
 </launch>

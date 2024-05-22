@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python2
 # -*- coding: utf-8 -*-
 
 #publish images
@@ -15,8 +15,15 @@ device_manager = gx.DeviceManager()
 dev_num, dev_info_list = device_manager.update_device_list()
 if dev_num == 0:
     sys.exit(1)
-str_sn = dev_info_list[0].get("sn")
-cam = device_manager.open_device_by_sn(str_sn)
+'''
+每个相机的sn都是独特的，在相机下面写着，这样就可以利用这个分开长短焦相机
+sn作为launch文件中外传入的参数
+'''
+sn_full_name = rospy.search_param('sn')
+param = rospy.get_param(sn_full_name)
+for key in param:  #反证只有一个键，虽说跟node有关
+    sn = param.get(key).get('sn')
+cam = device_manager.open_device_by_sn(sn)
 #set parameters
 cam.TriggerMode.set(gx.GxSwitchEntry.OFF)#set continuous acquisition
 cam.ExposureTime.set(10000)  #set exposure time
@@ -25,7 +32,7 @@ cam.ExposureTime.set(10000)  #set exposure time
 cam.stream_on()
 
 def talker():
-    pub = rospy.Publisher('image_dh_sf', Image, queue_size=1)
+    pub = rospy.Publisher('image_dh', Image, queue_size=1)
     rospy.init_node('publisher', anonymous=True)
     while not rospy.is_shutdown():
         raw_image = cam.data_stream[0].get_image()

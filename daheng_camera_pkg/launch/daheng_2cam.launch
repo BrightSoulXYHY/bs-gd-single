@@ -1,0 +1,13 @@
+<launch>
+  <group ns="camera_lf">
+      <node name="cam_lf"  pkg="daheng_camera_pkg" type="publisher_2cam.py" output="screen" >
+        <param name="sn" value="FCB24030091" type="str" />
+      </node>
+  </group>
+ 
+  <group ns="camera_sf">
+      <node name="cam_sf" pkg="daheng_camera_pkg" type="publisher_2cam.py" output="screen" >
+        <param name="sn" value="FCB24040106"  type="str" />
+      </node>
+  </group>
+</launch>

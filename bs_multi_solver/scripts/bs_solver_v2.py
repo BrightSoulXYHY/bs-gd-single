@@ -18,7 +18,7 @@ from cv_bridge import CvBridge, CvBridgeError
 from bs_imu import bs_imu
 from bs_imu import bs_gps_raw
 from bs_img import bs_img_real
-from bs_img.bs_cfg_real_5m import *
+from bs_cfg_real_5m import *
 from bs_lie_solve import *
 
 '''
@@ -51,26 +51,26 @@ class BS_Solver:
         # self.ts = message_filters.TimeSynchronizer([self.lf_img_sub, self.sf_img_sub], queue_size=10)
         # self.ts.registerCallback(self.img_cb)
     
-    # def lf_img_cb(self,img_msg):
-    #     img_gray = self.img_bridge.imgmsg_to_cv2(img_msg, img_msg.encoding)
-    #     # 如果相机倒置需要旋转一下
-    #     # lf_img_gray = cv2.rotate(lf_img_gray, cv2.ROTATE_180)
+    def lf_img_cb(self,img_msg):
+        img_gray = self.img_bridge.imgmsg_to_cv2(img_msg, img_msg.encoding)
+        # 如果相机倒置需要旋转一下
+        # lf_img_gray = cv2.rotate(lf_img_gray, cv2.ROTATE_180)
 
-    #     gt_pts,_ = bs_img_real.img_to_pts(img_gray)
-    #     result_dict = bs_img_real.solve_plane_pt(gt_pts,plane_real_ptL=plane_real_ptL,cam_K=camK_lf)
+        gt_pts,_ = bs_img_real.img_to_pts(img_gray)
+        result_dict = bs_img_real.solve_plane_pt(gt_pts,plane_real_ptL=plane_real_ptL,cam_K=camK_lf)
         
-    #     x,y,z = result_dict["t_vec"]
-    #     qw,qx,qy,qz = bs_imu.rot_vec_to_quat(result_dict["r_vec"])
+        x,y,z = result_dict["t_vec"]
+        qw,qx,qy,qz = bs_imu.rot_vec_to_quat(result_dict["r_vec"])
 
-    #     trans_msg = Transform()
-    #     trans_msg.translation.x = x
-    #     trans_msg.translation.y = y
-    #     trans_msg.translation.z = z
-    #     trans_msg.rotation.w = qw
-    #     trans_msg.rotation.x = qx
-    #     trans_msg.rotation.y = qy
-    #     trans_msg.rotation.z = qz
-    #     self.lf_res_pub.publish(trans_msg)
+        trans_msg = Transform()
+        trans_msg.translation.x = x
+        trans_msg.translation.y = y
+        trans_msg.translation.z = z
+        trans_msg.rotation.w = qw
+        trans_msg.rotation.x = qx
+        trans_msg.rotation.y = qy
+        trans_msg.rotation.z = qz
+        self.lf_res_pub.publish(trans_msg)
 
 
 

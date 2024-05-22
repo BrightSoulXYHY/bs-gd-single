@@ -1,0 +1,3 @@
+<launch>
+    <node pkg="bs_multi_solver" type="bs_solver_2cam.py" name="bs_solver_2cam" output="screen" />
+</launch>
